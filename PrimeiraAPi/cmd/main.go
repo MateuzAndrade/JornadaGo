@@ -2,6 +2,9 @@ package main
 
 import (
 	"go-api/controller"
+	"go-api/db"
+	"go-api/repository"
+	"go-api/usecase"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,7 +12,17 @@ import (
 func main() {
 	server := gin.Default()
 
-	MusicController := controller.NewMusicController()
+	dbConnection, err := db.ConnectDB()
+	if err != nil {
+		panic(err)
+	}
+
+	//Camada do Repository
+	MusicRepository := repository.NewMusicRepository(dbConnection)
+
+	MusicUseCase := usecase.NewMusicUsecase(MusicRepository)
+
+	MusicController := controller.NewMusicController(MusicUseCase)
 
 	server.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
