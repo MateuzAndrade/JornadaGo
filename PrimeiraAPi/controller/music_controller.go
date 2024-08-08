@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"go-api/model"
 	"go-api/usecase"
 	"net/http"
 
@@ -24,4 +25,22 @@ func (m *musicController) GetMusic(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, err)
 	}
 	ctx.JSON(http.StatusOK, musics)
+}
+
+func (m *musicController) CreateMusic(ctx *gin.Context) {
+
+	var music model.Music
+	err := ctx.BindJSON(&music)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	insertMusic, err := m.MusicUsecase.CreateMusic(music)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, insertMusic)
 }

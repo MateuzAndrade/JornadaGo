@@ -15,6 +15,19 @@ func NewMusicUsecase(repo repository.MusicRepository) MusicUsecase {
 	}
 }
 
-func (mu *MusicUsecase) GetMusics() ([]model.Music, error) {
-	return mu.repository.GetMusics()
+func (mc *MusicUsecase) GetMusics() ([]model.Music, error) {
+	return mc.repository.GetMusics()
+}
+
+func (mc *MusicUsecase) CreateMusic(music model.Music) (model.Music, error) {
+
+	musicId, err := mc.repository.CreateMusic(music)
+	if err != nil {
+		return model.Music{}, err
+	}
+
+	music.ID = musicId
+
+	return music, nil
+
 }

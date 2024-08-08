@@ -31,6 +31,7 @@ func main() {
 	})
 
 	server.GET("/musics", MusicController.GetMusic)
+	server.POST("/musics", MusicController.CreateMusic)
 
 	server.Run(":8000")
 }

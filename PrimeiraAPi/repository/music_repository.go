@@ -48,3 +48,23 @@ func (mc *MusicRepository) GetMusics() ([]model.Music, error) {
 	return musicList, nil
 
 }
+
+func (mc *MusicRepository) CreateMusic(music model.Music) (int, error) {
+	var id int
+	query, err := mc.connection.Prepare("INSERT INTO music" +
+		"(music_name,artist_name,time_music_seconds)" +
+		" VALUES ($1,$2,$3) RETURNING ID")
+	if err != nil {
+		fmt.Println(err)
+		return 0, err
+	}
+
+	err = query.QueryRow(music.Music_name, music.Artist_Name, music.Time_Music_Seconds).Scan(&id)
+	if err != nil {
+		fmt.Println(err)
+		return 0, err
+	}
+	query.Close()
+	return id, nil
+
+}
