@@ -19,6 +19,14 @@ func (mc *MusicUsecase) GetMusics() ([]model.Music, error) {
 	return mc.repository.GetMusics()
 }
 
+func (mc *MusicUsecase) GetMusicById(id_music int) (*model.Music, error) {
+	music, err := mc.repository.GetMusicById(id_music)
+	if err != nil {
+		return nil, err
+	}
+	return music, nil
+}
+
 func (mc *MusicUsecase) CreateMusic(music model.Music) (model.Music, error) {
 
 	musicId, err := mc.repository.CreateMusic(music)

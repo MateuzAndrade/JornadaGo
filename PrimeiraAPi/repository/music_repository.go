@@ -49,6 +49,33 @@ func (mc *MusicRepository) GetMusics() ([]model.Music, error) {
 
 }
 
+func (mc *MusicRepository) GetMusicById(id_music int) (*model.Music, error) {
+	query, err := mc.connection.Prepare("SELECT * FROM MUSIC WHERE ID = $1")
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	var music model.Music
+
+	err = query.QueryRow(id_music).Scan(
+		&music.ID,
+		&music.Music_name,
+		&music.Artist_Name,
+		&music.Time_Music_Seconds,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	query.Close()
+	return &music, nil
+}
+
 func (mc *MusicRepository) CreateMusic(music model.Music) (int, error) {
 	var id int
 	query, err := mc.connection.Prepare("INSERT INTO music" +
