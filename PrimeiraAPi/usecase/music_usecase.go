@@ -39,3 +39,11 @@ func (mc *MusicUsecase) CreateMusic(music model.Music) (model.Music, error) {
 	return music, nil
 
 }
+
+func (mc *MusicUsecase) UpdateMusic(music model.Music) error {
+	err := mc.repository.UpdateMusic(music)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -93,5 +93,20 @@ func (mc *MusicRepository) CreateMusic(music model.Music) (int, error) {
 	}
 	query.Close()
 	return id, nil
+}
 
+func (mc *MusicRepository) UpdateMusic(music model.Music) error {
+	query, err := mc.connection.Prepare("UPDATE music SET music_name = $1, artist_name = $2, time_music_seconds = $3 WHERE id =  $4")
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	defer query.Close()
+
+	_, err = query.Exec(music.Music_name, music.Artist_Name, music.Time_Music_Seconds, music.ID)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
 }

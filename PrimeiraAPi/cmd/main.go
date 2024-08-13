@@ -33,6 +33,6 @@ func main() {
 	server.GET("/musics", MusicController.GetMusic)
 	server.GET("/musics/:music_id", MusicController.GetMusicById)
 	server.POST("/musics", MusicController.CreateMusic)
-
+	server.PUT("/musics/:music_id", MusicController.UpdateMusic)
 	server.Run(":8000")
 }

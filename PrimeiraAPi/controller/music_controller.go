@@ -82,3 +82,41 @@ func (m *musicController) CreateMusic(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusCreated, insertMusic)
 }
+
+func (m *musicController) UpdateMusic(ctx *gin.Context) {
+	id := ctx.Param("music_id")
+
+	if id == "" {
+		response := model.Response{
+			Message: "ID da Music não pode ser Nulo",
+		}
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	musicId, err := strconv.Atoi(id)
+	if err != nil {
+		response := model.Response{
+			Message: "ID da Music precisa ser um número",
+		}
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	var music model.Music
+	err = ctx.BindJSON(&music)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	music.ID = musicId
+
+	err = m.MusicUsecase.UpdateMusic(music)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Music atualizada com sucesso"})
+}
